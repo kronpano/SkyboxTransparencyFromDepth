@@ -41,7 +41,8 @@
 			// Create the cockpit sphere
 			const smallGeometry = new THREE.SphereGeometry(1, 32, 32);
 			const smallMaterial = new THREE.MeshStandardMaterial({
-			  map: new THREE.TextureLoader().load('CockpitTransp.png'), 
+			  map: new THREE.TextureLoader().load('Cockpit_1.jpg'), 
+			  alphaMap: new THREE.TextureLoader().load('CockpitDepthBW.jpg'), 
 			  side: THREE.DoubleSide,
 			  transparent: true,
 			});
