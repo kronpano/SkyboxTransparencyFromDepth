@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Windows cut out</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	</head>
+	<style>
+		body {
+			overflow: hidden;
+			margin: 0px;
+		}
+		
+	</style>
+	
+	<body>
+ 		<div id="container"></div>
+		<script type="module">
+
+			import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js";
+			import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/controls/OrbitControls.js";
+			
+			// Set up the scene
+			const scene = new THREE.Scene();
+			const clock = new THREE.Clock();
+			const camera = new THREE.PerspectiveCamera(95, window.innerWidth / window.innerHeight, 0.1, 1000);
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+
+			// Create the background sphere
+			const bigGeometry = new THREE.SphereGeometry(15, 32, 32);
+			const bigMaterial = new THREE.MeshBasicMaterial({
+			  map: new THREE.TextureLoader().load('CockpitBG.jpg'), 
+			  side: THREE.DoubleSide,
+			});
+			const bigSphere = new THREE.Mesh(bigGeometry, bigMaterial);
+			scene.add(bigSphere);
+			bigSphere.position.set(0, 0, 0);
+
+			// Create the cockpit sphere
+			const smallGeometry = new THREE.SphereGeometry(1, 32, 32);
+			const smallMaterial = new THREE.MeshStandardMaterial({
+			  map: new THREE.TextureLoader().load('CockpitTransp.png'), 
+			  side: THREE.DoubleSide,
+			  transparent: true,
+			});
+			const smallSphere = new THREE.Mesh(smallGeometry, smallMaterial);
+			scene.add(smallSphere);
+			smallSphere.position.set(0, -0, 0);
+
+			// light needed for standard material
+			const light = new THREE.PointLight(0xfff0ed, 1.8,4);
+			light.position.set(0, 0.1, 0.1);
+			scene.add(light);
+
+			// Enable mouse rotation using OrbitControls
+			const controls = new OrbitControls(camera, renderer.domElement);
+			
+			// Set the minimum and maximum distances of the controls
+			const minDistance = 0; // Minimum distance from the camera to the target
+			const maxDistance = 0.9; // Maximum distance from the camera to the target
+			controls.minDistance = minDistance;
+			controls.maxDistance = maxDistance;
+
+			// Set up the camera position
+			camera.position.set(0.2, -0.1,-0.1);
+			controls.target.set( 0, -0.1, 0.1 );
+			controls.autoRotate = true;
+			controls.autoRotateSpeed = 0.2;
+			controls.panSpeed = 0.05;
+			controls.screenSpacePanning = false;
+			controls.update();
+			
+			function animate() {
+				renderer.setAnimationLoop( render );				
+			}
+
+			function render() {
+				controls.update();
+				const time = clock.getElapsedTime();
+				bigSphere.rotation.y += 0.0005;
+				bigSphere.rotation.x -= 0.00025;
+				
+				smallSphere.position.x = Math.sin( time/8 ) * 0.06;
+				smallSphere.position.z = Math.cos( time/8 ) * 0.06;
+				
+				bigSphere.position.x = Math.sin( time/6 ) * 4;
+
+				renderer.render( scene, camera );
+
+			}
+
+			animate();
+  </script>
+</body>
+</html>
