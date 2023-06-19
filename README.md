@@ -1,4 +1,4 @@
-# SkyboxAndDepth
+# Skybox transparency from generated depth map
 small examples of using depth map and 360 skyboxes with three.js
 
 The generated depth map was used to create the CockpitTransp.png file
